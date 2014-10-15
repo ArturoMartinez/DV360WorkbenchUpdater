@@ -48,7 +48,7 @@ public class DV360Updater extends JFrame {
             public void propertyChange(PropertyChangeEvent pce) {
                
                if (pce.getNewValue() == SwingWorker.StateValue.DONE){
-                   JOptionPane.showMessageDialog(null, "DV360Workbench has been updated!", "Successful!", JOptionPane.INFORMATION_MESSAGE);
+                   JOptionPane.showMessageDialog(null, "DV360 Workbench has been updated!", "Successful!", JOptionPane.INFORMATION_MESSAGE);
                }//fi*/
                
             }
@@ -64,7 +64,6 @@ public class DV360Updater extends JFrame {
     }
     
     private void setBackground(){
-        DV360Logo background = null;
         
         ImageIcon logo = null;
         Dimension wDim = new Dimension(this.getWidth(), this.getHeight());
@@ -76,8 +75,7 @@ public class DV360Updater extends JFrame {
             logo = new ImageIcon(image.getAbsolutePath());
         }
         
-        background = new DV360Logo(logo.getImage(), wDim);
-        this.setContentPane(background);
+        this.setContentPane(new DV360Logo(logo.getImage(), wDim));
     }
     
     private void appendItemsToFrame(){
