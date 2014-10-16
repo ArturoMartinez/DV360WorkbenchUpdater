@@ -24,7 +24,7 @@ public class DV360Updater extends JFrame {
     private static UpdaterEngine _engine = null;
     private static String _exePath = null;
     private static File _toolsFolder = null;
-    private static UpdatesVersions _versions = null;
+    private static DV360Versions _versions = null;
     
     private JComboBox _cbVersions;
     private JTextField toolsPath;
@@ -33,27 +33,33 @@ public class DV360Updater extends JFrame {
     private JButton _start;
     
     
-    public void loadEngine() throws FileNotFoundException, IOException{
+    public void loadEngine(){
         
-        List<String> extensions = new ArrayList();
-        extensions.add("xml");
-        extensions.add("dll");
-        extensions.add("xslt");
-        extensions.add("DataView360Workbench.exe");
-        extensions.add("DataView360Workbench.exe.config");
-        _engine = new UpdaterEngine(extensions, _global, _partial, _innerResources, _exePath, _versions, _toolsFolder);
-        _engine.addPropertyChangeListener(new PropertyChangeListener(){
+        try{
+            List<String> extensions = new ArrayList();
+            extensions.add("xml");
+            extensions.add("dll");
+            extensions.add("xslt");
+            extensions.add("DataView360Workbench.exe");
+            extensions.add("DataView360Workbench.exe.config");
+            _engine = new UpdaterEngine(extensions, _global, _partial, _innerResources, _exePath, _versions, _toolsFolder);
+            _engine.addPropertyChangeListener(new PropertyChangeListener(){
 
-            @Override
-            public void propertyChange(PropertyChangeEvent pce) {
-               
-               if (pce.getNewValue() == SwingWorker.StateValue.DONE){
-                   JOptionPane.showMessageDialog(null, "DV360 Workbench has been updated!", "Successful!", JOptionPane.INFORMATION_MESSAGE);
-               }//fi*/
-               
-            }
-        });
-        _engine.execute();
+                @Override
+                public void propertyChange(PropertyChangeEvent pce) {
+
+                   if (pce.getNewValue() == SwingWorker.StateValue.DONE){
+                       JOptionPane.showMessageDialog(null, "DV360 Workbench has been updated!", "Successful!", JOptionPane.INFORMATION_MESSAGE);
+                   }//fi*/
+
+                }
+            });
+            _engine.execute();
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, "DV360 Workbench has encountered an ERROR:\n"+ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }finally{
+            _engine.getLog().closeLog();
+        }
     }
     
     private void centerWindow() {
@@ -178,7 +184,7 @@ public class DV360Updater extends JFrame {
         _exePath = DV360Updater.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     }
 
-    public DV360Updater() throws FileNotFoundException, IOException {
+    public DV360Updater() throws FileNotFoundException, IOException{
         
         this.setUndecorated(true);
         this.setBounds(0, 0, 640, 338);
@@ -187,7 +193,7 @@ public class DV360Updater extends JFrame {
         this.setResizable(false);
         
         setOSEnviromentVars();        
-        _versions = new UpdatesVersions(_innerResources, _exePath);
+        _versions = new DV360Versions(_innerResources, _exePath);
         
         setBackground();
         appendItemsToFrame();        
@@ -202,9 +208,9 @@ public class DV360Updater extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                try {
+                try{
                     new DV360Updater();
-                } catch (Exception ex) {
+                }catch(Exception ex){
                     ex.printStackTrace(System.out);
                 }
             }
